@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI-Powered Historical Storyteller</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #fff;
+    }
+    .container {
+      background: #fff;
+      color: #222;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px 40px 40px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    h1 {
+      margin-bottom: 25px;
+      font-weight: 600;
+      font-size: 2.3rem;
+      color: #2575fc;
+      letter-spacing: 1.2px;
+    }
+    input[type="file"] {
+      margin: 20px 0 15px;
+      width: 100%;
+      padding: 12px 10px;
+      font-size: 16px;
+      border: 2px solid #2575fc;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+    input[type="file"]:hover {
+      border-color: #6a11cb;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 18px;
+      border: 2px solid #2575fc;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      transition: border-color 0.3s ease;
+      font-weight: 500;
+      color: #444;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #6a11cb;
+      box-shadow: 0 0 10px #6a11cb;
+    }
+    button {
+      background: #6a11cb;
+      border: none;
+      color: white;
+      padding: 16px 0;
+      width: 100%;
+      font-size: 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 1.1px;
+      box-shadow: 0 8px 20px rgba(106, 17, 203, 0.5);
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+      user-select: none;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #2575fc;
+      box-shadow: 0 12px 30px rgba(37, 117, 252, 0.7);
+    }
+    #preview {
+      margin: 25px auto 20px;
+      max-width: 100%;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      border: 4px solid #6a11cb;
+      transition: transform 0.4s ease;
+    }
+    #preview:hover {
+      transform: scale(1.03);
+    }
+    #story {
+      background: #f3f6fc;
+      border-radius: 25px 25px 25px 0;
+      padding: 25px 30px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #33475b;
+      line-height: 1.5;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      min-height: 140px;
+      position: relative;
+      text-align: left;
+      margin-top: 15px;
+    }
+    #story::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20px;
+      width: 30px;
+      height: 30px;
+      background: #f3f6fc;
+      clip-path: polygon(0 100%, 100% 100%, 0 0);
+      box-shadow: -5px 5px 8px rgba(0, 0, 0, 0.03);
+    }
+    .loader {
+      border: 5px solid #f3f6fc;
+      border-top: 5px solid #6a11cb;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 40px auto 10px;
+      animation: spin 1s linear infinite;
+      display: none;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .control-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .control-buttons button {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      button {
+        font-size: 18px;
+        padding: 14px 0;
+      }
+      .control-buttons button {
+        font-size: 14px;
+        padding: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>AI-Powered Historical Storyteller</h1>
+
+    <input type="file" id="imageInput" accept="image/*" />
+    <input type="text" id="placeInput" placeholder="Type place name (e.g., Hampi, Mysore)" />
+
+    <button id="generateBtn">Generate Story & Speak</button>
+
+    <div class="control-buttons" style="display:none;">
+      <button id="pauseBtn">Pause</button>
+      <button id="resumeBtn">Resume</button>
+      <button id="restartBtn">Restart</button>
+    </div>
+
+    <img id="preview" src="" alt="Uploaded Place Image" style="display:none" />
+    
+    <div class="loader" id="loader"></div>
+
+    <div id="story">Your historical story will appear here.</div>
+  </div>
+
+  <script>
+    const knownPlaces = {
+      hampi: "Hampi",
+      mysore: "Mysore",
+      badami: "Badami",
+      shravanbelagola: "Shravanbelagola",
+      beluru: "Beluru Halebiddu"
+    };
+
+    const imageInput = document.getElementById("imageInput");
+    const placeInput = document.getElementById("placeInput");
+    const preview = document.getElementById("preview");
+    const storyDiv = document.getElementById("story");
+    const generateBtn = document.getElementById("generateBtn");
+    const loader = document.getElementById("loader");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resumeBtn = document.getElementById("resumeBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const controlButtons = document.querySelector(".control-buttons");
+
+    let currentUtterance = null;
+    let currentStoryText = "";
+
+    // Show image preview and try detect place from filename
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+        const lowerName = file.name.toLowerCase();
+        for (const key in knownPlaces) {
+          if (lowerName.includes(key)) {
+            placeInput.value = knownPlaces[key];
+            break;
+          }
+        }
+      }
+    });
+
+    // Custom stories for known places
+ // Updated fetchStory function with new texts for Hampi and Mysore
+function fetchStory(place) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      let storyText = '';
+      switch (place.toLowerCase()) {
+        case 'hampi':
+          storyText = `Hampi, the heart of the Vijayanagara Empire, is a land of timeless beauty and mystique. Once a thriving city, it was famed for its grand temples, colossal stone structures, and bustling bazaars. Legend whispers of its glory, where kings and scholars walked under the shade of massive boulders, and the river Tungabhadra flowed through the city, reflecting the vibrant culture. Today, the ruins of Hampi stand as silent witnesses to its glorious past, with intricately carved temples like the Virupaksha Temple, and the iconic stone chariot, captivating the imagination of every traveler. Hampi’s magical charm, with its fusion of nature and history, transports visitors back to an era of magnificent architecture, royal intrigue, and divine worship.`;
+          break;
+        case 'mysore':
+          storyText = `Mysore, the City of Palaces, enchants visitors with its regal splendor and rich heritage. Known for the majestic Mysore Palace, adorned with intricate craftsmanship and illuminated during festivals, it reflects the grandeur of the Wodeyar dynasty. The city is a cultural hub with vibrant traditions, bustling markets, and the famous Dasara festival that celebrates the victory of good over evil. Beyond its royal aura, Mysore offers serene gardens, yoga centers, and a deep connection to spirituality and art, making it a perfect blend of history and modernity. Every corner of Mysore tells a story of valor, art, and celebration that lingers in the hearts of all who visit.`;
+          break;
+        default:
+          storyText = `Here's an amazing story about ${place}. This historical site is known for its breathtaking architecture, deep-rooted culture, and stories passed down through generations. Visitors are often mesmerized by its timeless beauty and rich heritage. Dive in and explore the mysteries and legends that make ${place} truly unforgettable!`;
+      }
+      resolve(storyText);
+    }, 2000);
+  });
+}
+
+
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // cancel any ongoing speech
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = 'en-IN';
+        currentUtterance.rate = 1;
+        currentUtterance.pitch = 1;
+        window.speechSynthesis.speak(currentUtterance);
+
+        // Show control buttons
+        controlButtons.style.display = "flex";
+      } else {
+        alert("Sorry, your browser doesn't support speech synthesis.");
+      }
+    }
+
+    generateBtn.addEventListener("click", async () => {
+      const placeName = placeInput.value.trim();
+      if (!placeName) {
+        alert("Please type a place name or upload an image with a recognized place.");
+        return;
+      }
+
+      storyDiv.textContent = "";
+      loader.style.display = "block";
+      controlButtons.style.display = "none";
+
+      currentStoryText = await fetchStory(placeName);
+
+      loader.style.display = "none";
+      storyDiv.textContent = currentStoryText;
+
+      speak(currentStoryText);
+    });
+
+    pauseBtn.addEventListener("click", () => {
+      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+      }
+    });
+
+    resumeBtn.addEventListener("click", () => {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+    });
+
+    restartBtn.addEventListener("click", () => {
+      if (currentStoryText) {
+        window.speechSynthesis.cancel();
+        speak(currentStoryText);
+      }
+    });
+
+  </script>
+
+</body>
+</html>

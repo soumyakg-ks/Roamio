@@ -1,0 +1,211 @@
+<!-- Location Selector -->
+<section id="location" class="location-section">
+  <h2>📍 Where Are You?</h2>
+  <p>Select your current location to get personalized recommendations:</p>
+
+  <div id="locationOptions" style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; max-width: 700px; margin: auto;">
+    <button class="location-btn" data-value="hampi">Hampi</button>
+    <button class="location-btn" data-value="mysore">Mysore</button>
+    <button class="location-btn" data-value="badami">Badami</button>
+    <button class="location-btn" data-value="shravanbelagola">Shravanbelagola</button>
+    <button class="location-btn" data-value="beluru_halebiddu">Beluru Halebiddu</button>
+  </div>
+
+  <button id="nextBtn" onclick="showMoodSection()" disabled style="margin-top: 20px;">Next →</button>
+</section>
+
+<!-- Mood Predictor Section (initially hidden) -->
+<section id="mood" class="mood-section hidden">
+  <h2>🌈 How Are You Feeling Today?</h2>
+  <p>Select your current mood and get a special recommendation for your virtual tour or a place to relax!</p>
+
+  <div class="mood-container">
+    <select id="moodSelect">
+      <option value="">-- Choose a Mood --</option>
+      <option value="happy">😊 Happy</option>
+      <option value="sad">😢 Sad</option>
+      <option value="excited">🤩 Excited</option>
+      <option value="angry">😠 Angry</option>
+      <option value="calm">😌 Calm</option>
+      <option value="tired">😴 Tired</option>
+    </select>
+    <button onclick="predictMood()">✨ Predict</button>
+  </div>
+
+  <div id="moodResult" class="result hidden"></div>
+
+  <button onclick="goBack()" style="margin-top: 20px;">← Back to Location</button>
+</section>
+
+<script>
+  let selectedLocation = "";
+
+  // Add click event to each location button
+  const locationButtons = document.querySelectorAll(".location-btn");
+  locationButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Remove highlight from all
+      locationButtons.forEach(b => b.classList.remove("selected"));
+      // Highlight clicked button
+      btn.classList.add("selected");
+      // Save selected location
+      selectedLocation = btn.getAttribute("data-value");
+      // Enable Next button
+      document.getElementById("nextBtn").disabled = false;
+    });
+  });
+
+  function showMoodSection() {
+    if (!selectedLocation) {
+      alert("Please select a location first!");
+      return;
+    }
+    document.getElementById("location").classList.add("hidden");
+    document.getElementById("mood").classList.remove("hidden");
+  }
+
+  function predictMood() {
+    const mood = document.getElementById("moodSelect").value;
+    const resultDiv = document.getElementById("moodResult");
+
+    if (!mood) {
+      alert("Please select a mood!");
+      return;
+    }
+
+    // Recommendations based on location and mood
+    const suggestions = {
+      hampi: {
+        happy: "Explore the vibrant market area and visit the Virupaksha Temple! Also, try the local pubs for a lively evening.",
+        sad: "Take a calming walk around the Tungabhadra River and visit the Lotus Mahal to uplift your spirit.",
+        excited: "Don't miss the thrill of climbing Matanga Hill for panoramic views!",
+        angry: "Find peace near the ancient ruins and meditate by the Hemakuta Hill temples.",
+        calm: "Enjoy a serene boat ride on the Tungabhadra River and sip coffee at a cozy café.",
+        tired: "Relax in a quiet guesthouse and enjoy the sunset near the Royal Enclosure."
+      },
+      mysore: {
+        happy: "Celebrate your mood by visiting Mysore Palace and enjoy Mysore Dasara festivities if in season! Check out local pubs downtown.",
+        sad: "Visit the peaceful Brindavan Gardens and enjoy soothing musical fountains.",
+        excited: "Explore Chamundi Hill and the bustling Devaraja Market!",
+        angry: "Relax in the serene Karanji Lake Butterfly Park.",
+        calm: "Enjoy a quiet stroll in the Botanical Gardens and sip tea at a local tea house.",
+        tired: "Rest at a cozy homestay near Kukkarahalli Lake and enjoy Mysore's calm ambiance."
+      },
+      badami: {
+        happy: "Explore the fascinating rock-cut temples and enjoy local cuisine in town.",
+        sad: "Visit the Agastya Lake and find calm near the ancient cave temples.",
+        excited: "Take an adventurous hike up Badami Fort and explore the caves!",
+        angry: "Meditate near the Bhutanatha Group of Temples for tranquility.",
+        calm: "Relax at a riverside café and enjoy the scenic views.",
+        tired: "Rest in a quiet guesthouse and enjoy peaceful walks."
+      },
+      shravanbelagola: {
+        happy: "Celebrate by climbing the Vindhyagiri Hill and visiting the statue of Gomateshwara.",
+        sad: "Find solace in the serene temples and meditate in quiet spots.",
+        excited: "Explore the many Jain monuments and local museums!",
+        angry: "Sit peacefully near Chandragiri Hill and reflect.",
+        calm: "Enjoy a calm afternoon at the surrounding gardens.",
+        tired: "Rest and rejuvenate in nearby guest accommodations."
+      },
+      beluru_halebiddu: {
+        happy: "Explore the magnificent Hoysala architecture and enjoy local festivals.",
+        sad: "Take a slow walk through the temple complexes and find peace.",
+        excited: "Join guided tours to learn fascinating history!",
+        angry: "Sit quietly and absorb the spiritual energy of the temples.",
+        calm: "Enjoy peaceful surroundings and local tea stalls.",
+        tired: "Relax in nearby accommodations surrounded by nature."
+      }
+    };
+
+    const message = (suggestions[selectedLocation] && suggestions[selectedLocation][mood]) 
+      ? suggestions[selectedLocation][mood] 
+      : "✨ No specific recommendation available. Enjoy your visit!";
+
+    resultDiv.innerHTML = message;
+    resultDiv.classList.remove("hidden");
+  }
+
+  function goBack() {
+    document.getElementById("mood").classList.add("hidden");
+    document.getElementById("location").classList.remove("hidden");
+    // Reset mood result and select
+    document.getElementById("moodResult").classList.add("hidden");
+    document.getElementById("moodSelect").value = "";
+  }
+</script>
+
+<style>
+  .location-section, .mood-section {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f0f8ff;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  .location-btn {
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: 2px solid #5a9bd6;
+    background: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .location-btn:hover {
+    background-color: #5a9bd6;
+    color: white;
+  }
+
+  .location-btn.selected {
+    background-color: #2a6bd1;
+    color: white;
+    border-color: #1a4a9e;
+  }
+
+  select, button {
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    margin: 10px 5px;
+    cursor: pointer;
+  }
+
+  button {
+    background-color: #5a9bd6;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  button:hover:not(:disabled) {
+    background-color: #3b7bbf;
+  }
+
+  button:disabled {
+    background-color: #aac8f8;
+    cursor: not-allowed;
+  }
+
+  .result {
+    margin-top: 30px;
+    font-size: 1.2em;
+    color: #333;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+</style>

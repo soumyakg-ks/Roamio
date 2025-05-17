@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StateVista - Explore Karnataka</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="first.css" />
+  <script src="first.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0; padding: 0;
+      background: #f9f9f9;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+    }
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 5px;
+      box-shadow: 0 0 8px #00bcd4;
+    }
+    .nav a {
+      color: #cfd8dc;
+      margin-left: 25px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav a:hover,
+    .nav a:focus {
+      color: #00bcd4;
+    }
+    .nav a::after {
+      content: "";
+      display: block;
+      height: 3px;
+      width: 0%;
+      background: #00bcd4;
+      transition: 0.3s ease;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-radius: 2px;
+    }
+    .nav a:hover::after {
+      width: 100%;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      color: #00bcd4;
+      cursor: pointer;
+    }
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      background: #203a43;
+      padding: 1rem 20px;
+    }
+    .mobile-nav.show {
+      display: flex;
+      animation: fadeInDown 0.3s ease forwards;
+    }
+    .mobile-nav a {
+      color: #cfd8dc;
+      margin: 10px 0;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .mobile-nav a:hover {
+      color: #00bcd4;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      overflow: hidden;
+    }
+    .hero-section .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 31, 53, 0.7);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: 3px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    }
+    .hero-content p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.6);
+    }
+    .hero-content button {
+      background: #00bcd4;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0, 188, 212, 0.5);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .hero-content button:hover {
+      background: #008ba3;
+      transform: scale(1.05);
+    }
+
+    /* Map Section */
+    .map-section {
+      padding: 4rem 20px 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .map-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: #0f2027;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 2.5rem;
+    }
+    .location-card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .location-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 188, 212, 0.4);
+    }
+    .location-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 4px solid #00bcd4;
+      transition: transform 0.3s ease;
+    }
+    .location-card:hover img {
+      transform: scale(1.05);
+    }
+    .location-content {
+      padding: 1.5rem 1.2rem 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .location-content h3 {
+      font-size: 1.5rem;
+      margin: 0 0 0.5rem;
+      color: #0f2027;
+    }
+    .location-content p {
+      flex-grow: 1;
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+    .map-btn {
+      background: #00bcd4;
+      border: none;
+      padding: 10px 25px;
+      color: white;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      align-self: flex-start;
+      box-shadow: 0 4px 10px rgba(0,188,212,0.3);
+    }
+    .map-btn:hover {
+      background: #008ba3;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .nav {
+        display: none;
+      }
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <img src="logo.jpg" alt="Logo" class="logo-img" />
+        <span class="logo-text">ROAMIO</span>
+      </div>
+
+      <nav class="nav" id="navbar">
+        <a href="#">Home</a>
+        <a href="#map">Map</a>
+        <a href="voice-guide.html">Voice Guide</a>
+        <a href="virtual-tour.html">360° Tour</a>
+        <a href="history.html">Historical Spots</a>
+        <a href="culinary.html">Culinary Predictor</a>
+        <a href="moodpredictor.html">Mood Predictor</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    </div>
+
+    <div class="mobile-nav" id="mobile-nav">
+      <a href="#">Home</a>
+      <a href="#map">Map</a>
+      <a href="voice-guide.html">Voice Guide</a>
+      <a href="virtual-tour.html">360° Tour</a>
+      <a href="history.html">Historical Spots</a>
+         <a href="culinary.html">Culinary Predictor</a>
+      <a href="moodpredictor.html">Mood Predictor</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>Explore, Experience, Enjoy!</h1>
+      <p>Discover historical gems, virtual experiences, and hidden destinations — all in one place.</p>
+      <button onclick="scrollToExplore()">Start Exploring</button>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section id="map" class="map-section">
+    <h2 class="map-title">Explore Karnataka's Treasures</h2>
+    <div class="card-grid">
+
+      <!-- Hampi -->
+      <div class="location-card" data-map="Hampi">
+        <img src="https://karnatakatourism.org/wp-content/uploads/2020/05/Hampi.jpg" alt="Hampi" />
+        <div class="location-content">
+          <h3>Hampi</h3>
+          <p>Ancient ruins of the Vijayanagara Empire, stone chariots, and temples.</p>
+          <button class="map-btn">View on Map</button>
+        </div>
+      </div>
+
+      <!-- Mysore -->
+      <div class="location-card" data-map="Mysore">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7GcUoivMTN90fuulBCBLsuMuJT3ca-VhYVg&s" alt="Mysore" />
+        <div class="location-content">
+          <h3>Mysore</h3>
+          <p>Home to the magnificent Mysore Palace and vibrant Dussehra festival.</p>
+          <button class="map-btn">View on Map</button>
+        </div>
+      </div>
+
+      <!-- Badami -->
+      <div class="location-card" data-map="Badami">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/View_of_Bhutanatha_temple_in_Badami_during_monsoon.jpg/290px-View_of_Bhutanatha_temple_in_Badami_during_monsoon.jpg" alt="Badami" />
+        <div class="location-content">
+          <h3>Badami</h3>
+          <p>Famous for its ancient cave temples and sandstone cliffs.</p>
+          <button class="map-btn">View on Map</button>
+        </div>
+      </div>
+
+      <!-- Shravanbelagola -->
+      <div class="location-card" data-map="Shravanbelagola">
+        <img src="https://karnatakatourism.org/wp-content/uploads/2020/05/Shravanabelagola.jpg" alt="Shravanbelagola" />
+        <div class="location-content">
+          <h3>Shravanbelagola</h3>
+          <p>Jain pilgrimage site with the world’s largest monolithic statue of Lord Bahubali.</p>
+          <button class="map-btn">View on Map</button>
+        </div>
+      </div>
+
+      <!-- Belur & Halebidu -->
+      <div class="location-card" data-map="Belur+Halebidu">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQNaFX4pPG7EPOn3xsfsTEkrveE8EgFxsVYQ&s" alt="Belur Halebidu" />
+        <div class="location-content">
+          <h3>Belur & Halebidu</h3>
+          <p>Incredible Hoysala architecture and intricate temple carvings.</p>
+          <button class="map-btn">View on Map</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  
+  <script>
+    // Scroll to Map Section
+    function scrollToExplore() {
+      document.getElementById("map").scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Open Google Maps on Button Click
+    document.querySelectorAll(".map-btn").forEach(button => {
+      button.addEventListener("click", function () {
+        const locationCard = this.closest(".location-card");
+        const location = locationCard.getAttribute("data-map");
+        const formattedLocation = location.replace(/\+/g, "%20");
+        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${formattedLocation}`;
+        window.open(googleMapsUrl, "_blank");
+      });
+    });
+
+    // Toggle for Mobile Nav
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("mobile-nav").classList.toggle("show");
+    });
+  </script>
+
+</body>
+</html>

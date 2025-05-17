@@ -1,0 +1,93 @@
+<!-- Contact Us Section -->
+<section id="contact" class="contact-section">
+  <h2>📞 Contact Us</h2>
+  <p>We'd love to hear from you! Whether you have a question, feedback, or just want to say hi.</p>
+
+  <form id="contactForm" class="contact-form">
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+
+  <div class="contact-info">
+    <p><strong>📧 Email:</strong> support@roamio.com</p>
+    <p><strong>📍 Location:</strong>Bangalore Karnataka, India</p>
+  </div>
+</section>
+
+<!-- Optional JavaScript (Fake Form Submission) -->
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    alert("Thank you for reaching out! We'll get back to you soon.");
+    this.reset();
+  });
+</script>
+
+<!-- CSS Styling -->
+<style>
+  .contact-section {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    text-align: center;
+    border-radius: 16px;
+    margin: 40px 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .contact-section h2 {
+    font-size: 2.2em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+
+  .contact-section p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  .contact-form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    resize: vertical;
+  }
+
+  .contact-form button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .contact-form button:hover {
+    background-color: #0056b3;
+  }
+
+  .contact-info {
+    margin-top: 30px;
+    font-size: 1em;
+    color: #333;
+  }
+
+  .contact-info p {
+    margin: 8px 0;
+  }
+</style>

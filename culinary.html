@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mood-Based Food + Hotel Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Tangerine&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fef9f3;
+      color: #4e342e;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      font-family: 'Tangerine', cursive;
+      font-size: 3rem;
+      text-align: center;
+      color: #8e3200;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff5e1;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label, select, button {
+      font-size: 1.1rem;
+      margin-top: 15px;
+      display: block;
+      width: 100%;
+    }
+
+    select {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #c59d5f;
+      background-color: #fff;
+    }
+
+    button {
+      background-color: #8e3200;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a64b00;
+    }
+
+    #suggestion {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1b5e20;
+    }
+
+    #map {
+      height: 400px;
+      margin-top: 25px;
+      border-radius: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>What's Your Mood?</h1>
+
+  <div class="card">
+    <label for="place">📍 Select a Place:</label>
+    <select id="place">
+      <option value="">-- Select a place --</option>
+      <option value="hampi">Hampi</option>
+      <option value="mysore">Mysore</option>
+      <option value="badami">Badami</option>
+      <option value="shravanbelagola">Shravanbelagola</option>
+      <option value="beluru">Beluru Halebiddu</option>
+    </select>
+
+    <label for="mood">🧘 How Are You Feeling?</label>
+    <select id="mood">
+      <option value="">-- Select your mood --</option>
+      <option value="happy">Happy</option>
+      <option value="tired">Tired</option>
+      <option value="adventurous">Adventurous</option>
+      <option value="relaxed">Relaxed</option>
+      <option value="hungry">Hungry</option>
+    </select>
+
+    <label for="mealTime">🍽️ Select Meal Time:</label>
+    <select id="mealTime">
+      <option value="">-- Select meal time --</option>
+      <option value="breakfast">Breakfast</option>
+      <option value="lunch">Lunch</option>
+      <option value="dinner">Dinner</option>
+    </select>
+
+    <button onclick="getSuggestion()">🍲 Get Food Suggestion</button>
+
+    <p id="suggestion"></p>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    const suggestions = {
+      tired: {
+        breakfast: "Try filter coffee and vada nearby!",
+        lunch: "A comforting sambar rice is perfect now.",
+        snack: "Grab masala chai and bonda.",
+        dinner: "Soft idlis with chutney will help you unwind."
+      },
+      happy: {
+        breakfast: "Celebrate with masala dosa and chutney!",
+        lunch: "Enjoy a festive South Indian thali!",
+        snack: "Sweeten your mood with jalebi or mysore pak.",
+        dinner: "Try paneer biryani at a rooftop place!"
+      },
+      hungry: {
+        breakfast: "Get pongal with ghee and sambar now!",
+        lunch: "Go for biryani or full meals nearby!",
+        snack: "Grab samosas and juice now!",
+        dinner: "Ragi mudde and spicy curry recommended!"
+      },
+      adventurous: {
+        breakfast: "Akki rotti and chutney awaits nearby!",
+        lunch: "Try naati-style chicken or local seafood.",
+        snack: "Street churmuri or pani puri will excite!",
+        dinner: "Go chef’s special at a unique joint!"
+      },
+      relaxed: {
+        breakfast: "Rava idli and kesari bath to start slow.",
+        lunch: "Cool off with curd rice and pickle.",
+        snack: "Pakoras and ginger tea will calm you.",
+        dinner: "Appam with coconut stew is soothing!"
+      }
+    };
+
+    const places = {
+      hampi: {
+        coords: [15.3350, 76.4600],
+        hotels: [
+          { name: "Hampi Heritage Resort", coords: [15.3357, 76.4621], description: "Serene resort amidst nature.", price: "₹3500/night" },
+          { name: "Clarks Inn Hampi", coords: [15.3325, 76.4569], description: "Modern stay near ruins.", price: "₹2800/night" },
+          { name: "Hotel Hampi International", coords: [15.3391, 76.4702], description: "Comfortable and budget-friendly.", price: "₹1800/night" }
+        ]
+      },
+      mysore: {
+        coords: [12.2958, 76.6394],
+        hotels: [
+          { name: "Radisson Blu", coords: [12.3007, 76.6494], description: "Luxury stay near Zoo.", price: "₹5200/night" },
+          { name: "Hotel Sandesh", coords: [12.3015, 76.6443], description: "Family-friendly hotel.", price: "₹3200/night" }
+        ]
+      },
+      badami: {
+        coords: [15.9180, 75.6760],
+        hotels: [
+          { name: "Badami Court", coords: [15.9187, 75.6769], description: "Mid-range hotel with gardens.", price: "₹2400/night" },
+          { name: "Hotel Mayura", coords: [15.9172, 75.6785], description: "Close to cave temples.", price: "₹1500/night" }
+        ]
+      },
+      shravanbelagola: {
+        coords: [12.8579, 76.4700],
+        hotels: [
+          { name: "Janardhan Palace", coords: [12.8585, 76.4709], description: "Simple and peaceful stay.", price: "₹1200/night" },
+          { name: "Whispering Woods", coords: [12.8555, 76.4650], description: "Surrounded by nature.", price: "₹1800/night" }
+        ]
+      },
+      beluru: {
+        coords: [13.1611, 75.8625],
+        hotels: [
+          { name: "Mayura Yatrinivas", coords: [13.1620, 75.8640], description: "Next to temple complex.", price: "₹1500/night" },
+          { name: "Hill View Hotel", coords: [13.1590, 75.8610], description: "Good views and calm stay.", price: "₹1900/night" }
+        ]
+      }
+    };
+
+    let map, markersGroup;
+
+    function getSuggestion() {
+      const placeKey = document.getElementById("place").value;
+      const mood = document.getElementById("mood").value;
+      const mealTime = document.getElementById("mealTime").value;
+
+      if (!placeKey) {
+        alert("Please select a place.");
+        return;
+      }
+      if (!mood) {
+        alert("Please select your mood.");
+        return;
+      }
+      if (!mealTime) {
+        alert("Please select meal time.");
+        return;
+      }
+
+      const suggestion = suggestions[mood]?.[mealTime] || "Try local delicacies nearby!";
+      document.getElementById("suggestion").textContent = `🍛 Suggestion: ${suggestion}`;
+
+      showMap(placeKey);
+    }
+
+    function showMap(placeKey) {
+      const place = places[placeKey];
+      document.getElementById("map").style.display = "block";
+
+      if (!map) {
+        map = L.map("map").setView(place.coords, 13);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+      } else {
+        map.setView(place.coords, 13);
+        if (markersGroup) markersGroup.clearLayers();  // Clear old markers
+      }
+
+      markersGroup = L.layerGroup().addTo(map);
+
+      place.hotels.forEach(hotel => {
+        const popupContent = `<strong>${hotel.name}</strong><br>${hotel.description}<br><b>Price:</b> ${hotel.price}`;
+        L.marker(hotel.coords).bindPopup(popupContent).addTo(markersGroup);
+      });
+    }
+  </script>
+</body>
+</html>

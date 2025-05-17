@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>360 Virtual Tours</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #34495e;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #4a90e2, #50e3c2);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Floating background shapes */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.15;
+      filter: blur(70px);
+      animation: float 6s ease-in-out infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 400px;
+      height: 400px;
+      background: #fff;
+      top: 20%;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      background: #ffd700;
+      bottom: 15%;
+      right: -80px;
+      animation-delay: 3s;
+    }
+
+    .virtual-tour-section {
+      max-width: 900px;
+      margin: 3rem auto 4rem;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+
+    .virtual-tour-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      opacity: 0.07;
+      z-index: -1;
+      border-radius: 20px;
+      pointer-events: none;
+      filter: grayscale(40%) brightness(1.1);
+    }
+
+    .section-title {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      color: #16a085;
+      margin-bottom: 3rem;
+      letter-spacing: 1.5px;
+      user-select: none;
+      text-shadow: 2px 2px 8px rgba(22, 160, 133, 0.5);
+    }
+
+    .tour-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      margin-bottom: 2.8rem;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .tour-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    }
+    .tour-card h3 {
+      margin: 1.4rem 1.8rem 1.2rem;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #1abc9c;
+      user-select: none;
+      letter-spacing: 0.9px;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    iframe {
+      width: 100%;
+      height: 380px;
+      border: none;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      transition: filter 0.3s ease;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.05);
+    }
+    .tour-card:hover iframe {
+      filter: brightness(1.07);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .section-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+      }
+      .tour-card h3 {
+        font-size: 1.6rem;
+      }
+      iframe {
+        height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="virtual-tour" class="virtual-tour-section">
+    <h2 class="section-title">🧭 360° Virtual Tours</h2>
+
+    <div class="tour-card" tabindex="0">
+      <h3>🏯 Hampi</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1616900039330!6m8!1m7!1sCAoSLEFGMVFpcE9xZW1wQVRMcGVaUUp2TGplcHR6cS1KMm5QZ3F6SndmOWw0MUNP!2m2!1d15.335!2d76.4601!3f0!4f0!5f1.5707963267948966" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <div class="tour-card" tabindex="0">
+      <h3>🏰 Mysore Palace</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1616899946619!6m8!1m7!1sCAoSLEFGMVFpcE14MUtrUWQ3c3A4X3FCUk1LN3lwQlpqNlFEaVFxVmhJeWxiWGxv!2m2!1d12.3052!2d76.6552!3f0!4f0!5f1.5707963267948966" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <div class="tour-card" tabindex="0">
+      <h3>⛩️ Badami Caves</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1616900214789!6m8!1m7!1sCAoSLEFGMVFpcE44TWdsWE53WTRsZkx3bnZpNjd5ZUZFbXkxZ3dBeUpibmhXc1do!2m2!1d15.9158!2d75.6768!3f0!4f0!5f1.5707963267948966" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <div class="tour-card" tabindex="0">
+      <h3>🛕 Shravanbelagola</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1652124553897!6m8!1m7!1sCAoSLEFGMVFpcFBVTEgwMG5HQUhRRE9ZdEVzV1FNYmpPdVh2SkMwclhXQ1FyTUlT!2m2!1d12.8574!2d76.4881!3f0!4f0!5f1.5707963267948966" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+
+    <div class="tour-card" tabindex="0">
+      <h3>🏛️ Belur & Halebidu</h3>
+      <iframe src="https://www.google.com/maps/embed?pb=!4v1652124611249!6m8!1m7!1sCAoSLEFGMVFpcFBOMkFiTnY3eFB3WElxMzNnZ2l3c2F3OEdKYjFtTEx3VzlaOXFo!2m2!1d13.1656!2d75.8651!3f0!4f0!5f1.5707963267948966" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </section>
+</body>
+</html>
